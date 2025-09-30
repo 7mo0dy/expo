@@ -21,11 +21,11 @@ export interface RenderToImageResult {
      */
     uri: string;
     /**
-     * Image width.
+     * Image width in dp.
      */
     width: number;
     /**
-     * Image height.
+     * Image height in dp.
      */
     height: number;
 }
