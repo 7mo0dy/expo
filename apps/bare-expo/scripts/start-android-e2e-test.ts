@@ -49,7 +49,7 @@ const __dirname = dirname(__filename);
         );
       }
       const e2eDir = path.join(projectRoot, 'e2e');
-      await runCustomMaestroFlowsAsync(e2eDir, (maestroFlowFilePath) =>
+      await runCustomMaestroFlowsAsync(e2eDir, 'android', (maestroFlowFilePath) =>
         testAsync(maestroFlowFilePath, deviceId, appBinaryPath, adbPath, e2eDir)
       );
 

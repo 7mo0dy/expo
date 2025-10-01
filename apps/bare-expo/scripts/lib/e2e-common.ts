@@ -144,24 +144,37 @@ export function setupLogger(command: string, signal: AbortSignal): () => Promise
   };
 }
 
-const getCustomMaestroFlowsAsync = async (e2eDir: string): Promise<string[]> => {
+const getCustomMaestroFlowsAsync = async (
+  e2eDir: string,
+  platform?: 'android' | 'ios'
+): Promise<string[]> => {
+  const ignore = ['maestro-generated.yaml', '_nested-flows/**'];
+
+  // Exclude platform-specific files for other platforms
+  if (platform === 'android') {
+    ignore.push('**/*.ios.yaml');
+  } else if (platform === 'ios') {
+    ignore.push('**/*.android.yaml');
+  }
+
   const yamlFiles = await glob.glob('**/*.yaml', {
     cwd: e2eDir,
     maxDepth: 2, // e2e root + one level deep
-    ignore: ['maestro-generated.yaml', '_nested-flows/**'],
+    ignore,
   });
 
-  console.log({ 'detected maestro files:': yamlFiles });
+  console.log(`detected maestro files for ${platform}:`, yamlFiles);
   return yamlFiles;
 };
 
 export const runCustomMaestroFlowsAsync = async (
   e2eDir: string,
+  platform: 'android' | 'ios',
   fn: (maestroFlowFilePath: string) => Promise<void>
 ) => {
   const retriesForCustomTests = 3;
 
-  const maestroFlows = await getCustomMaestroFlowsAsync(e2eDir);
+  const maestroFlows = await getCustomMaestroFlowsAsync(e2eDir, platform);
   for (const maestroFlowRelativePath of maestroFlows) {
     const maestroFlowFilePath = path.join(e2eDir, maestroFlowRelativePath);
     await retryAsync((retryNumber) => {

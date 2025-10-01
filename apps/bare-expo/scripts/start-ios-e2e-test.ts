@@ -50,7 +50,7 @@ const __dirname = dirname(__filename);
         appBinaryPath,
         e2eDir
       );
-      await runCustomMaestroFlowsAsync(e2eDir, (maestroFlowFilePath) =>
+      await runCustomMaestroFlowsAsync(e2eDir, 'ios', (maestroFlowFilePath) =>
         testAsync(maestroFlowFilePath, deviceId, appBinaryPath, e2eDir)
       );
 
